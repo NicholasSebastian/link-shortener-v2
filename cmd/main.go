@@ -16,6 +16,8 @@ func main() {
 	username := ""
 	tokenstr := services.NewJwtToken(username)
 	// TODO: Store this in the user's cookies or payload or sth.
+	// TODO: Move this into the API handler for '/login'
+
 	// TODO: All the other stuff...
 
 	log.Println(tokenstr)

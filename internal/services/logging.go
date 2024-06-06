@@ -11,6 +11,11 @@ func LogError(message string) {
 	// TODO: Save to the database.
 }
 
+func LogErrorf(format string, v ...any) {
+	message := fmt.Sprintf(format, v...)
+	LogError(message)
+}
+
 func LogAndReturnError(message string) error {
 	LogError(message)
 	return fmt.Errorf(message)

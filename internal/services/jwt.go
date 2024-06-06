@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"os"
 	"time"
 
@@ -21,8 +20,7 @@ func NewJwtToken(username string) string {
 	tokenstr, err := token.SignedString(key)
 
 	if err != nil {
-		msg := fmt.Sprintf("failed to sign the JWT token for user %q", username)
-		LogError(msg)
+		LogErrorf("failed to sign the JWT token for user %q", username)
 	}
 	return tokenstr
 }
@@ -35,8 +33,7 @@ func getSecretKey() []byte {
 func parseTokenMethod(tokenstr string) (*jwt.Token, error) {
 	return jwt.Parse(tokenstr, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodECDSA); !ok {
-			msg := "failed to parse JWT token; unexpected signing method"
-			err := LogAndReturnError(msg)
+			err := LogAndReturnError("failed to parse JWT token; unexpected signing method")
 			return nil, err
 		} else {
 			key := getSecretKey()
@@ -47,23 +44,20 @@ func parseTokenMethod(tokenstr string) (*jwt.Token, error) {
 
 func parseTokenClaims(token *jwt.Token) (string, error) {
 	if !token.Valid {
-		msg := "invalid JWT token"
-		err := LogAndReturnError(msg)
+		err := LogAndReturnError("invalid JWT token")
 		return "", err
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		msg := "failed to parse JWT token; unexpected claims"
-		err := LogAndReturnError(msg)
+		err := LogAndReturnError("failed to parse JWT token; unexpected claims")
 		return "", err
 	}
 
 	if username, ok := claims["username"].(string); ok {
 		return username, nil
 	} else {
-		msg := "failed to parse username from JWT token claims; expected a string"
-		err := LogAndReturnError(msg)
+		err := LogAndReturnError("failed to parse user from JWT token claims")
 		return "", err
 	}
 }
