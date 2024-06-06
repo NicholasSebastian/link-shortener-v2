@@ -2,8 +2,8 @@ package main
 
 import (
 	"log"
-	"os"
 
+	"github.com/NicholasSebastian/link-shortener-v2/internal/services"
 	"github.com/joho/godotenv"
 )
 
@@ -13,10 +13,10 @@ func main() {
 		log.Fatalln("Server Error: Failed to load environment variables.")
 	}
 
-	// TODO: man what am i doing with my life.
+	username := ""
+	tokenstr := services.NewJwtToken(username)
+	// TODO: Store this in the user's cookies or payload or sth.
+	// TODO: All the other stuff...
 
-	authKey := os.Getenv("AUTH_KEY")
-	authKeyBytes := []byte(authKey)
-
-	log.Println(authKeyBytes) // just testing
+	log.Println(tokenstr)
 }
