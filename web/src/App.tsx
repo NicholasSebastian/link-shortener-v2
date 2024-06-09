@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 
-function App() {
+function App(): ReactNode {
   const [count, setCount] = useState(0)
 
   return (

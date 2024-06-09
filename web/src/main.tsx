@@ -1,10 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
+import Login from './Login.tsx'
 
 const rootJsx = (
   <React.StrictMode>
-    <App />
+    <Login>
+      <App />
+    </Login>
   </React.StrictMode>
 )
 

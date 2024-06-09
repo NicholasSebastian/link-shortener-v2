@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/NicholasSebastian/link-shortener-v2/internal/services"
+	"github.com/NicholasSebastian/link-shortener-v2/internal/auth"
 	"github.com/joho/godotenv"
 )
 
@@ -18,6 +18,7 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
+	mux.HandleFunc("/login", auth.HandleLogin)
 	// TODO: Register the route handlers here.
 
 	server := http.Server{
@@ -29,12 +30,5 @@ func main() {
 		log.Fatalf("error running the HTTP server: %s\n", err)
 	}
 
-	username := ""
-	tokenstr := services.NewJwtToken(username)
-	// TODO: Store this in the user's cookies or payload or sth.
-	// TODO: Move this into the API handler for '/login'
-
 	// TODO: All the other stuff...
-
-	log.Println(tokenstr)
 }
