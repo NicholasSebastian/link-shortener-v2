@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/NicholasSebastian/link-shortener-v2/internal/models"
 	"github.com/NicholasSebastian/link-shortener-v2/internal/services"
 )
 
@@ -17,15 +18,22 @@ func HandleLogin(res http.ResponseWriter, req *http.Request) {
 	var c credentials
 	decoder := json.NewDecoder(req.Body)
 	if err := decoder.Decode(&c); err != nil {
-		services.LogErrorf("Malformed Login Request Body: %s", err)
+		services.LogErrorf("malformed login request body: %s", err)
 	}
 
-	// TODO: Check if the given username and password are valid.
-	log.Println(c.Username, c.Password)
+	database := services.NewDatabase()
+	users := models.NewUsers(database)
 
-	tokenstr := NewJwtToken(c.Username)
-	log.Println(tokenstr)
-	// TODO: Store this in the user's cookies or payload or sth.
+	valid, err := users.Exists(c.Username, c.Password)
+	if err != nil {
+		services.LogErrorf("failed to access users database: %s", err)
+	}
 
-	// TODO: Respond with the appropriate status code.
+	if valid {
+		tokenstr := NewJwtToken(c.Username)
+		log.Println(tokenstr)
+		// TODO: Store this in the user's cookies or payload or sth.
+	} else {
+		res.WriteHeader(http.StatusUnauthorized)
+	}
 }
